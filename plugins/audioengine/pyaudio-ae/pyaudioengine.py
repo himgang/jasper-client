@@ -175,7 +175,8 @@ class PyAudioDevice(plugin.audioengine.AudioDevice):
                               output=False) as stream:
             while True:
                 try:
-                    frame = stream.read(chunksize)
+                    if stream.is_active():
+                        frame = stream.read(chunksize)
                 except IOError as e:
                     if type(e.errno) is not int:
                         # Simple hack to work around the fact that the
