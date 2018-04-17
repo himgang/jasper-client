@@ -171,29 +171,28 @@ class PyAudioDevice(plugin.audioengine.AudioDevice):
                                "output" if output else "input", self.slug)
 
     def record(self, chunksize, *args):
-        stream = self.open_stream(*args, chunksize=chunksize,
-                              output=False)
-        while True:
-            try:
-                frame = stream.read(chunksize)
-            except IOError as e:
-                if type(e.errno) is not int:
+        with self.open_stream(*args, chunksize=chunksize,
+                              output=False) as stream:
+            while True:
+                try:
+                    frame = stream.read(chunksize)
+                except IOError as e:
+                    if type(e.errno) is not int:
                         # Simple hack to work around the fact that the
                         # errno/strerror arguments were swapped in older
                         # PyAudio versions. This was fixed in upstream
                         # commit 1783aaf9bcc6f8bffc478cb5120ccb6f5091b3fb.
-                    strerror, errno = e.errno, e.strerror
-                if e.errno == '-9981' or e.errno == -9981 :
-                    strerror, errno = e.strerror, e.errno
-                    self._logger.warning("inside input overflow clause" +
-                                    " '%s': '%s' (Errno: %d)", self.slug,strerror, errno)
-                    stream = self.open_stream(*args, chunksize=chunksize,
-                              output=False)
-                else:
-                    strerror, errno = e.strerror, e.errno
+                        strerror, errno = e.errno, e.strerror
+                    if e.errno == '-9981' or e.errno == -9981 :
+                        strerror, errno = e.strerror, e.errno
+                        self._logger.warning("inside your if clause" +
+                                         " '%s': '%s' (Errno: %d)", self.slug,strerror, errno)
+                        self.record(chunksize,*args)
+                        break;
+                    else:
+                        strerror, errno = e.strerror, e.errno
                     self._logger.warning("IO error while reading from device" +
                                          " '%s': '%s' (Errno: %d)", self.slug,
                                          strerror, errno)
-            else:
-                yield frame
-                stream.close()
+                else:
+                    yield frame
