@@ -154,47 +154,48 @@ class Mic(object):
         recording = False
         recording_frames = []
         self._logger.info("Waiting for keyword '%s'...", keyword)
-        for frame in self._input_device.record(self._input_chunksize,
+        while true:
+            for frame in self._input_device.record(self._input_chunksize,
                                                self._input_bits,
                                                self._input_channels,
                                                self._input_rate):
-            if keyword_uttered.is_set():
-                self._logger.info("Keyword %s has been uttered", keyword)
-                return
-            frames.append(frame)
-            if not recording:
-                snr = self._snr([frame])
-                if snr >= 10:  # 10dB
-                    # Loudness is higher than normal, start recording and use
-                    # the last 10 frames to start
-                    self._logger.debug("Started recording on device '%s'",
+                if keyword_uttered.is_set():
+                    self._logger.info("Keyword %s has been uttered", keyword)
+                    return
+                frames.append(frame)
+                if not recording:
+                    snr = self._snr([frame])
+                    if snr >= 10:  # 10dB
+                        # Loudness is higher than normal, start recording and use
+                        # the last 10 frames to start
+                        self._logger.debug("Started recording on device '%s'",
                                        self._input_device.slug)
-                    self._logger.debug("Triggered on SNR of %sdB", snr)
-                    recording = True
-                    recording_frames = list(frames)[-10:]
-                elif len(frames) >= frames.maxlen:
-                    # Threshold SNR not reached. Update threshold with
-                    # background noise.
-                    self._threshold = float(audioop.rms("".join(frames), 2))
-            else:
-                # We're recording
-                recording_frames.append(frame)
-                if len(recording_frames) > 20:
-                    # If we recorded at least 20 frames, check if we're below
-                    # threshold again
-                    last_snr = self._snr(recording_frames[-10:])
-                    self._logger.debug(
-                        "Recording's SNR dB: %f", last_snr)
-                    if last_snr <= 3 or len(recording_frames) >= 60:
-                        # The loudness of the sound is not at least as high as
-                        # the the threshold, or we've been waiting too long
-                        # we'll stop recording now
-                        recording = False
-                        self._logger.debug("Recorded %d frames",
+                        self._logger.debug("Triggered on SNR of %sdB", snr)
+                        recording = True
+                        recording_frames = list(frames)[-10:]
+                    elif len(frames) >= frames.maxlen:
+                        # Threshold SNR not reached. Update threshold with
+                        # background noise.
+                        self._threshold = float(audioop.rms("".join(frames), 2))
+                else:
+                    # We're recording
+                    recording_frames.append(frame)
+                    if len(recording_frames) > 20:
+                        # If we recorded at least 20 frames, check if we're below
+                        # threshold again
+                        last_snr = self._snr(recording_frames[-10:])
+                        self._logger.debug(
+                            "Recording's SNR dB: %f", last_snr)
+                        if last_snr <= 3 or len(recording_frames) >= 60:
+                            # The loudness of the sound is not at least as high as
+                            # the the threshold, or we've been waiting too long
+                            # we'll stop recording now
+                            recording = False
+                            self._logger.debug("Recorded %d frames",
                                            len(recording_frames))
-                        frame_queue.put(tuple(recording_frames))
-                        self._threshold = float(
-                            audioop.rms(b"".join(frames), 2))
+                            frame_queue.put(tuple(recording_frames))
+                            self._threshold = float(
+                                audioop.rms(b"".join(frames), 2))
 
     def listen(self):
         self.wait_for_keyword(self._keyword)
