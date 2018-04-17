@@ -166,7 +166,7 @@ class Mic(object):
                 frames.append(frame)
                 if not recording:
                     snr = self._snr([frame])
-                    if snr >= 10:  # 8dB
+                    if snr >= 6:  # 6dB
                         # Loudness is higher than normal, start recording and use
                         # the last 10 frames to start
                         self._logger.debug("Started recording on device '%s'",
