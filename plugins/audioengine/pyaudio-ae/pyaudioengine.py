@@ -156,7 +156,7 @@ class PyAudioDevice(plugin.audioengine.AudioDevice):
             'output': output,
             'input': not output,
             ('%s_device_index' % direction): self.index,
-            'frames_per_buffer': chunksize if output else chunksize*8  # Hacky
+            'frames_per_buffer': chunksize if output else chunksize*20  # Hacky
         }
         stream = self._engine._pyaudio.open(**stream_kwargs)
 
@@ -187,7 +187,7 @@ class PyAudioDevice(plugin.audioengine.AudioDevice):
                         strerror, errno = e.strerror, e.errno
                         self._logger.warning("inside your if clause" +
                                          " '%s': '%s' (Errno: %d)", self.slug,strerror, errno)
-                        yield "failed"
+                        break;
                     else:
                         strerror, errno = e.strerror, e.errno
                     self._logger.warning("IO error while reading from device" +
