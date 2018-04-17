@@ -187,7 +187,7 @@ class PyAudioDevice(plugin.audioengine.AudioDevice):
                         strerror, errno = e.strerror, e.errno
                         self._logger.warning("inside your if clause" +
                                          " '%s': '%s' (Errno: %d)", self.slug,strerror, errno)
-                        yield None
+                        yield frame
                     else:
                         strerror, errno = e.strerror, e.errno
                     self._logger.warning("IO error while reading from device" +
