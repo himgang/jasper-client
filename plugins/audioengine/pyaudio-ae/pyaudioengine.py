@@ -183,6 +183,12 @@ class PyAudioDevice(plugin.audioengine.AudioDevice):
                         # PyAudio versions. This was fixed in upstream
                         # commit 1783aaf9bcc6f8bffc478cb5120ccb6f5091b3fb.
                         strerror, errno = e.errno, e.strerror
+                    if e.errno == '-9981' or e.errno == -9981 :
+                        strerror, errno = e.strerror, e.errno
+                        self._logger.warning("inside your if clause" +
+                                         " '%s': '%s' (Errno: %d)", self.slug,strerror, errno)
+                        self.record(chunksize,*args)
+                        break;
                     else:
                         strerror, errno = e.strerror, e.errno
                     self._logger.warning("IO error while reading from device" +

@@ -1,0 +1,10 @@
+[Plugin]
+Name = fan
+Version = 1.0.0
+License = MIT
+URL = http://jasperproject.github.io/
+Description = changes current state of fan
+
+[Author]
+Name = Jasper Project
+URL = http://jasperproject.github.io/
