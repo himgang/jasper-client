@@ -185,9 +185,9 @@ class PyAudioDevice(plugin.audioengine.AudioDevice):
                         strerror, errno = e.errno, e.strerror
                     if e.errno == '-9981' or e.errno == -9981 :
                         strerror, errno = e.strerror, e.errno
-                        self._logger.warning("inside your if clause" +
+                        self._logger.warning("inside input overflow clause" +
                                          " '%s': '%s' (Errno: %d)", self.slug,strerror, errno)
-                        self.record(chunksize,*args)
+#                         self.record(chunksize,*args)
                         break;
                     else:
                         strerror, errno = e.strerror, e.errno

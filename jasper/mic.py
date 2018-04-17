@@ -145,7 +145,7 @@ class Mic(object):
         num_worker_threads = 2
 
         for i in range(num_worker_threads):
-            t = threading.Thread(target=self.check_for_keyword,
+            t = threading.Thread(target=self.check_for_keyword,name="check_for_keyword",
                                  args=(frame_queue, keyword_uttered, keyword))
             t.daemon = True
             t.start()
