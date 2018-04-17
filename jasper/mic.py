@@ -8,6 +8,7 @@ import contextlib
 import threading
 import math
 import sys
+import time
 
 if sys.version_info < (3, 0):  # NOQA
     import Queue as queue
@@ -165,7 +166,7 @@ class Mic(object):
                 frames.append(frame)
                 if not recording:
                     snr = self._snr([frame])
-                    if snr >= 10:  # 10dB
+                    if snr >= 10:  # 8dB
                         # Loudness is higher than normal, start recording and use
                         # the last 10 frames to start
                         self._logger.debug("Started recording on device '%s'",
@@ -206,14 +207,18 @@ class Mic(object):
         n = int(round((self._input_rate/self._input_chunksize)*timeout))
         self.play_file(paths.data('audio', 'beep_hi.wav'))
         frames = []
+        start_time = time.time()
         for frame in self._input_device.record(self._input_chunksize,
                                                self._input_bits,
                                                self._input_channels,
                                                self._input_rate):
             frames.append(frame)
-            if len(frames) >= 2*n or (
-                    len(frames) > n and self._snr(frames[-n:]) <= 3):
+            end_time = time.time()
+            if end_time-start_time > 3:
                 break
+#             if len(frames) >= 2*n or (
+#                     len(frames) > n and self._snr(frames[-n:]) <= 3):
+#                 break
         self.play_file(paths.data('audio', 'beep_lo.wav'))
         with self._write_frames_to_file(frames) as f:
             return self.active_stt_engine.transcribe(f)
