@@ -122,7 +122,7 @@ class GoogleSTTPlugin(plugin.STTPlugin):
         data = fp.read()
 
         headers = {'content-type': 'audio/l16; rate=%s' % frame_rate}
-        results = self.transcribett(fp)
+        results = self.transcribett(data)
 #         r = self._http.post(self.request_url, data=data, headers=headers)
 #         try:
 #             r.raise_for_status()
@@ -156,17 +156,15 @@ class GoogleSTTPlugin(plugin.STTPlugin):
 #             self._logger.info('Transcribed: %r', results)
         return results
     
-    def transcribett(self,fp):
+    def transcribett(self,data):
 
         # Instantiates a client
         client = speech.SpeechClient()
 
         # The name of the audio file to transcribe
-        file_name = fp
         # Loads the audio into memory
-        with io.open(file_name, 'rb') as audio_file:
-            content = audio_file.read()
-            audio = types.RecognitionAudio(content=content)
+        content = data
+        audio = types.RecognitionAudio(content=content)
 
         config = types.RecognitionConfig(
             encoding=google.cloud.speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
