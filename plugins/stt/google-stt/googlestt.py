@@ -169,8 +169,8 @@ class GoogleSTTPlugin(plugin.STTPlugin):
 
         config = types.RecognitionConfig(
             encoding=google.cloud.speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=48000,
-            language_code='en-US')
+            sample_rate_hertz=16000,
+            language_code='en-IN')
 
         # Detects speech in the audio file
         response = client.recognize(config, audio)
