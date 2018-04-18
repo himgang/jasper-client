@@ -4,15 +4,8 @@ import urllib
 import urlparse
 import wave
 import requests
-import io
-import os
-
-# Imports the Google Cloud client library
-from google.cloud import speech
-from google.cloud.speech import enums
-from google.cloud.speech import types
-from jasper import plugin
 from . import gst
+from jasper import plugin
 
 
 class GoogleSTTPlugin(plugin.STTPlugin):
