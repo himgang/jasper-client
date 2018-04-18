@@ -6,8 +6,10 @@ import wave
 import requests
 import io
 import os
-import google.cloud
-
+import google
+from google.cloud import speech
+from google.cloud.speech import enums
+from google.cloud.speech import types
 
 from jasper import plugin
 
@@ -157,16 +159,16 @@ class GoogleSTTPlugin(plugin.STTPlugin):
     def transcribett(self,fp):
 
         # Instantiates a client
-        client = google.cloud.speech.SpeechClient()
+        client = speech.SpeechClient()
 
         # The name of the audio file to transcribe
         file_name = fp
         # Loads the audio into memory
         with io.open(file_name, 'rb') as audio_file:
             content = audio_file.read()
-            audio = google.cloud.speech.types.RecognitionAudio(content=content)
+            audio = types.RecognitionAudio(content=content)
 
-        config = google.cloud.speech.types.RecognitionConfig(
+        config = types.RecognitionConfig(
             encoding=google.cloud.speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=16000,
             language_code='en-US')
