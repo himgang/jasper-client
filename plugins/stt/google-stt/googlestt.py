@@ -95,9 +95,6 @@ class GoogleSTTPlugin(plugin.STTPlugin):
             self._request_url = None
 
     def transcribe(self, fp):
-        from google.cloud import speech
-        from google.cloud.speech import enums
-        from google.cloud.speech import types
         """
         Performs STT via the Google Speech API, transcribing an audio file and
         returning an English string.
@@ -156,6 +153,9 @@ class GoogleSTTPlugin(plugin.STTPlugin):
         return results
     
     def transcribett(self,fp):
+        from google.cloud import speech
+        from google.cloud.speech import enums
+        from google.cloud.speech import types
         # Instantiates a client
         client = speech.SpeechClient()
 
