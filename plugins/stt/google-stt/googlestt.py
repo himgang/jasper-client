@@ -178,4 +178,4 @@ class GoogleSTTPlugin(plugin.STTPlugin):
         for result in response.results:
             print('Transcript: {}'.format(result.alternatives[0].transcript))
         
-        return result.alternatives[0].transcript
+        return response.results.alternatives[0].transcript
