@@ -22,6 +22,7 @@ encoding//plugins/speechhandler/roomlight/test_roomlight.py=utf-8
 encoding//plugins/speechhandler/tubelight/__init__.py=utf-8
 encoding//plugins/speechhandler/tubelight/tubelight.py=utf-8
 encoding//plugins/speechhandler/unclear/unclear.py=utf-8
+encoding//plugins/stt/google-stt/__init__.py=utf-8
 encoding//plugins/stt/pocketsphinx-stt/__init__.py=utf-8
 encoding//plugins/stt/pocketsphinx-stt/sphinxvocab.py=utf-8
 encoding/Jasper.py=utf-8
