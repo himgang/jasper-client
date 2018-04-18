@@ -118,7 +118,7 @@ class GoogleSTTPlugin(plugin.STTPlugin):
 
 #         wav = io.open(fp, 'rb')
 #         wav.close()
-        with io.open(file_name, 'rb') as audio_file:
+        with io.open(fp, 'rb') as audio_file:
             data = audio_file.read()
 
         headers = {'content-type': 'audio/l16; rate=%s' % frame_rate}
