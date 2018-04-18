@@ -116,10 +116,10 @@ class GoogleSTTPlugin(plugin.STTPlugin):
                                   'request aborted.')
             return []
 
-#         wav = io.open(fp, 'rb')
-#         wav.close()
-        with io.open(fp, 'rb') as audio_file:
-            data = audio_file.read()
+        wav = wave.open(fp, 'rb')
+        frame_rate = wav.getframerate()
+        wav.close()
+        data = fp.read()
 
         headers = {'content-type': 'audio/l16; rate=%s' % frame_rate}
         res = self.transcribett(data)
@@ -169,13 +169,13 @@ class GoogleSTTPlugin(plugin.STTPlugin):
 
         config = types.RecognitionConfig(
             encoding=google.cloud.speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=48000,
-            language_code='en-IN')
+            sample_rate_hertz=16000,
+            language_code='en-US')
 
         # Detects speech in the audio file
         response = client.recognize(config, audio)
-        self._logger.info('received response: %r',response)
+    
         for result in response.results:
-            self._logger.info('Transcribed: %r',result.alternatives[0].transcript)
+            print('Transcript: {}'.format(result.alternatives[0].transcript))
         
-        return response.results.alternatives[0].transcript
+        return result.alternatives[0].transcript
