@@ -176,6 +176,6 @@ class GoogleSTTPlugin(plugin.STTPlugin):
         response = client.recognize(config, audio)
     
         for result in response.results:
-            print('Transcript: {}'.format(result.alternatives[0].transcript))
+            self._logger.info('Transcribed: %r',result.alternatives[0].transcript)
         
         return response.results.alternatives[0].transcript
