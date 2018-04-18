@@ -6,7 +6,7 @@ import wave
 import requests
 import io
 import os
-import google
+import google.cloud
 
 
 from jasper import plugin
