@@ -1,6 +1,6 @@
 import io
 import os
-
+import google.cloud
 # Imports the Google Cloud client library
 from google.cloud import speech
 from google.cloud.speech import enums
