@@ -4,8 +4,9 @@ import urllib
 import urlparse
 import wave
 import requests
-from . import gst
+
 from jasper import plugin
+from . import gst
 
 
 class GoogleSTTPlugin(plugin.STTPlugin):

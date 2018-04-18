@@ -1,25 +1,21 @@
 import io
 import os
-
-# Imports the Google Cloud client library
-from google.cloud import speech
-from google.cloud.speech import enums
-from google.cloud.speech import types
+import google
 
 
 def transcribe(fp):
     # Instantiates a client
-    client = speech.SpeechClient()
+    client = google.cloud.speech.SpeechClient()
 
     # The name of the audio file to transcribe
     file_name = fp
     # Loads the audio into memory
     with io.open(file_name, 'rb') as audio_file:
         content = audio_file.read()
-        audio = types.RecognitionAudio(content=content)
+        audio = google.cloud.speech.types.RecognitionAudio(content=content)
 
-    config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+    config = google.cloud.speech.types.RecognitionConfig(
+        encoding=google.cloud.speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code='en-US')
 
