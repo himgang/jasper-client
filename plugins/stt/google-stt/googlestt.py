@@ -174,8 +174,9 @@ class GoogleSTTPlugin(plugin.STTPlugin):
 
         # Detects speech in the audio file
         response = client.recognize(config, audio)
-    
+        sendData=None
         for result in response.results:
-            print('Transcript: {}'.format(result.alternatives[0].transcript))
+            sendData=result.alternatives[0].transcript
+            print('Transcript: {}'.format(sendData))
         
-        return response.results.alternatives[0].transcript
+        return sendData
