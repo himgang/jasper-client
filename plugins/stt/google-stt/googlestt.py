@@ -122,7 +122,8 @@ class GoogleSTTPlugin(plugin.STTPlugin):
         data = fp.read()
 
         headers = {'content-type': 'audio/l16; rate=%s' % frame_rate}
-        results = self.transcribett(data)
+        res = self.transcribett(data)
+        results = [res,res]
 #         r = self._http.post(self.request_url, data=data, headers=headers)
 #         try:
 #             r.raise_for_status()
