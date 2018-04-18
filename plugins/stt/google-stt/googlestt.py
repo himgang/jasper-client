@@ -174,7 +174,7 @@ class GoogleSTTPlugin(plugin.STTPlugin):
 
         # Detects speech in the audio file
         response = client.recognize(config, audio)
-    
+        self._logger.info('received response: %r',response)
         for result in response.results:
             self._logger.info('Transcribed: %r',result.alternatives[0].transcript)
         
