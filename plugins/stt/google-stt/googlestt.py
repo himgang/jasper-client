@@ -116,10 +116,10 @@ class GoogleSTTPlugin(plugin.STTPlugin):
                                   'request aborted.')
             return []
 
-        wav = wave.open(fp, 'rb')
-        frame_rate = wav.getframerate()
-        wav.close()
-        data = fp.read()
+#         wav = io.open(fp, 'rb')
+#         wav.close()
+        with io.open(file_name, 'rb') as audio_file:
+            data = audio_file.read()
 
         headers = {'content-type': 'audio/l16; rate=%s' % frame_rate}
         res = self.transcribett(data)
