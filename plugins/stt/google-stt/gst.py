@@ -1,10 +1,4 @@
-import io
-import os
-import google.cloud
-# Imports the Google Cloud client library
-from google.cloud import speech
-from google.cloud.speech import enums
-from google.cloud.speech import types
+
 
 
 def transcribe(fp):
