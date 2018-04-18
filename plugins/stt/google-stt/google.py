@@ -4,6 +4,7 @@ import urllib
 import urlparse
 import wave
 import requests
+from . import gst
 from jasper import plugin
 
 
@@ -45,7 +46,7 @@ class GoogleSTTPlugin(plugin.STTPlugin):
         self._request_url = None
         self._language = None
         self._api_key = None
-        self._http = requests.Session()
+        self._http = None
         try:
             language = self.profile['language']
         except KeyError:
@@ -114,35 +115,38 @@ class GoogleSTTPlugin(plugin.STTPlugin):
         data = fp.read()
 
         headers = {'content-type': 'audio/l16; rate=%s' % frame_rate}
-        r = self._http.post(self.request_url, data=data, headers=headers)
-        try:
-            r.raise_for_status()
-        except requests.exceptions.HTTPError:
-            self._logger.critical('Request failed with http status %d',
-                                  r.status_code)
-            if r.status_code == requests.codes['forbidden']:
-                self._logger.warning('Status 403 is probably caused by an ' +
-                                     'invalid Google API key.')
-            return []
-        r.encoding = 'utf-8'
-        try:
-            # We cannot simply use r.json() because Google sends invalid json
-            # (i.e. multiple json objects, seperated by newlines. We only want
-            # the last one).
-            response = json.loads(list(r.text.strip().split('\n', 1))[-1])
-            if len(response['result']) == 0:
-                # Response result is empty
-                raise ValueError('Nothing has been transcribed.')
-            results = [alt['transcript'] for alt
-                       in response['result'][0]['alternative']]
-        except ValueError as e:
-            self._logger.warning('Empty response: %s', e.args[0])
-            results = []
-        except (KeyError, IndexError):
-            self._logger.warning('Cannot parse response.', exc_info=True)
-            results = []
-        else:
-            # Convert all results to uppercase
-            results = tuple(result.upper() for result in results)
-            self._logger.info('Transcribed: %r', results)
+        results = gst.transcribe(fp)
+#         r = self._http.post(self.request_url, data=data, headers=headers)
+#         try:
+#             r.raise_for_status()
+#         except requests.exceptions.HTTPError:
+#             self._logger.critical('Request failed with http status %d',
+#                                   r.status_code)
+#             if r.status_code == requests.codes['forbidden']:
+#                 self._logger.warning('Status 403 is probably caused by an ' +
+#                                      'invalid Google API key.')
+#             return []
+#         r.encoding = 'utf-8'
+#         try:
+#             # We cannot simply use r.json() because Google sends invalid json
+#             # (i.e. multiple json objects, seperated by newlines. We only want
+#             # the last one).
+#             response = json.loads(list(r.text.strip().split('\n', 1))[-1])
+#             if len(response['result']) == 0:
+#                 # Response result is empty
+#                 raise ValueError('Nothing has been transcribed.')
+#             results = [alt['transcript'] for alt
+#                        in response['result'][0]['alternative']]
+#         except ValueError as e:
+#             self._logger.warning('Empty response: %s', e.args[0])
+#             results = []
+#         except (KeyError, IndexError):
+#             self._logger.warning('Cannot parse response.', exc_info=True)
+#             results = []
+#         else:
+#             # Convert all results to uppercase
+#             results = tuple(result.upper() for result in results)
+#             self._logger.info('Transcribed: %r', results)
         return results
+    
+    
