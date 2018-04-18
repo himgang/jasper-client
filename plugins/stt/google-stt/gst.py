@@ -1,9 +1,8 @@
-import io
-import os
-import google.cloud as cloud
-
 
 def transcribe(fp):
+    from google.cloud import speech
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
     # Instantiates a client
     client = cloud.speech.SpeechClient()
 
