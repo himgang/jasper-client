@@ -6,9 +6,7 @@ import wave
 import requests
 import io
 import os
-from google.cloud import speech
-from google.cloud.speech import enums
-from google.cloud.speech import types
+
 from jasper import plugin
 
 
@@ -97,6 +95,9 @@ class GoogleSTTPlugin(plugin.STTPlugin):
             self._request_url = None
 
     def transcribe(self, fp):
+        from google.cloud import speech
+        from google.cloud.speech import enums
+        from google.cloud.speech import types
         """
         Performs STT via the Google Speech API, transcribing an audio file and
         returning an English string.
